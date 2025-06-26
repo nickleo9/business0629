@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商業考試完整複習系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 700px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+
+        .nav-button {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-button.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4facfe;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .answer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            border: 2px solid #e9ecef;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .answer.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-answer {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-answer:hover {
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .key-points {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .key-points h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+        }
+
+        .key-points li:last-child {
+            border-bottom: none;
+        }
+
+        .timer {
+            background: #fff;
+            border: 2px solid #4facfe;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .random-question {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .random-question:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: #4facfe;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .difficulty {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .difficulty-stars {
+            color: #ffc107;
+            margin-left: 10px;
+        }
+
+        .question-number {
+            background: #6c757d;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .subject-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 商業考試完整複習系統</h1>
+            <p>消費者行為 × 策略管理 | 所有題目完整收錄，高效複習</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <button class="nav-button active" onclick="showSection('dashboard')">
+                    📊 學習儀表板
+                </button>
+                <button class="nav-button" onclick="showSection('consumer-behavior')">
+                    🧠 消費者行為 (9題)
+                </button>
+                <button class="nav-button" onclick="showSection('strategic-management')">
+                    🎯 策略管理 (12題)
+                </button>
+                <button class="nav-button" onclick="showSection('random-quiz')">
+                    🎲 隨機測驗
+                </button>
+                <button class="nav-button" onclick="showSection('key-points')">
+                    📝 重點整理
+                </button>
+                <button class="nav-button" onclick="showSection('study-tips')">
+                    💡 考試技巧
+                </button>
+                <button class="nav-button" onclick="showSection('exam-template')">
+                    📋 答題模板
+                </button>
+            </div>
+
+            <div class="content-area">
+                <!-- 學習儀表板 -->
+                <div id="dashboard" class="section active">
+                    <h2>📊 學習進度儀表板</h2>
+                    
+                    <div class="timer">
+                        <h3>⏰ 學習計時器</h3>
+                        <div class="timer-display" id="timer">00:00:00</div>
+                        <button onclick="toggleTimer()" id="timerBtn" class="toggle-answer">開始學習</button>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalQuestions">21</div>
+                            <div>總題目數</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="answeredQuestions">0</div>
+                            <div>已練習題目</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="progressPercent">0%</div>
+                            <div>完成進度</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🔥 明天考試重點提醒</h3>
+                        <ul>
+                            <li><strong>消費者行為 9 題：</strong>馬斯洛需求層次、人格分析、感官刺激、消費者暴露、學習理論、記憶、說服理論</li>
+                            <li><strong>策略管理 12 題：</strong>全球策略、規模/範疇經濟、委外、多角化、併購、策略聯盟、Porter策略、藍海策略</li>
+                            <li><strong>答題技巧：</strong>先寫定義，再分點說明，每點都要舉例，寫越多越好</li>
+                            <li><strong>時間分配：</strong>每題至少寫5-8個重點，展現完整理解</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 消費者行為 -->
+                <div id="consumer-behavior" class="section">
+                    <div class="subject-header">
+                        <h2>🧠 消費者行為完整題庫 (共9題)</h2>
+                        <p>根據您的筆記內容，一字不差完整收錄</p>
+                    </div>
+                    
+                    <input type="text" class="search-box" placeholder="🔍 搜尋題目關鍵字..." onkeyup="searchQuestions(this.value, 'consumer-behavior')">
+                    
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q1</div>
+                        <div class="question">何謂馬斯洛需求層次理論?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">馬斯洛主張個體動機包含五大層次需求:
+高層需要至低層需要為:
+1自我實現需求:自我實現、發揮潛能
+2尊重需求:聲望、成就、地位
+3親密關係需求:愛情、友誼、被他人接受
+4安全需求:人生安全、生活穩定
+5生理需求:水、食物、睡眠</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q2</div>
+                        <div class="question">常見的人格分析論述有哪些?試舉其出兩種並簡述。</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">常見的人格分析論述有六學派:
+1精神分析學學派:[本我、自我、超我]觀點。
+2個體心理學學派
+3分析心理學學派:卡爾提出[自我意識、個體潛意識、集體潛意識]三大面向。
+4社會心理學學派
+5人本心理學學派
+6卡特爾的特徵理論:將化學元素表的科學分析方式運用於心理學上，分析出個體性格特徵具三類型-16種根源特質。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q3</div>
+                        <div class="question">消費者如何確認消費問題?透過消費者理想狀態和實際狀態之差距說明。</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">理想與現實差距可以接受，就沒有消費問題。
+而產生消費問題常見因素來自於產品損耗和慾望增長。
+1產品損耗(現實下降):例如電腦出現硬體故障，嚴重影響工作，覺得有必要購買新電腦來解決問題。
+2慾望增長(理想上升):例如朋友買高階新款手機，羨慕朋友使用的好體驗，即使自己手機沒壞但也想換一部新手機。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q4</div>
+                        <div class="question">消費者產品處置有哪些永久處理方法?有哪些保存處置方法?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">依殘存價值運用程度，永久處理方法有四種類型:
+1丟棄:將產品當作無價值物品回收 2轉讓:將產品轉讓給需要的人 
+3交換:讓產品發揮其殘存價值 4銷售:將產品殘存價值轉換成金錢
+常見保存處置有三種:
+1租借:可以租借給他人獲得租金收入 2轉換用途:是一種廢物利用的方式
+3繼續持有:常見原因有紀念價值和蒐集嗜好</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q5</div>
+                        <div class="question">消費者的感官刺激有哪五種類型?請說明五種感官刺激之感官接收器並舉例。</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">1視覺(感官接受器:眼睛):例如曲線瓶包裝的優酪乳呼應低熱量能雕塑身體曲線的概念。
+2聽覺(感官接收器:耳朵):例如咖啡廳撥放柔和的爵士樂會感到放鬆舒適。
+3嗅覺(感官接收器:鼻子):例如寢具店使用薰衣草香氛安定身心。
+4味覺(感覺接收器:口腔):例如大賣場的烤肉試吃活動。
+5觸覺(感官接收器:皮膚):例如家具店擺放柔軟滑順的皮革沙發試坐。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q6</div>
+                        <div class="question">何謂消費者暴露?選擇性暴露、過度暴露、感官門檻?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">消費者暴露:消費者注意到感官接受器所接受到的刺激程度，也是感知過程的第一階段。並不是所有的刺激都會轉化為消費者的知覺。影響因素有以下:
+選擇性暴露:避免認知負擔過大的篩選機制，往往會選擇有興趣的刺激而忽略其他的刺激。
+過度暴露:同一個刺激下太久或太頻繁產生疲乏，使得刺激失效。
+感官門檻:感官接收器能接收到的最低刺激強度，包含絕對門檻、差異門檻。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q7</div>
+                        <div class="question">消費者學習大致分為哪兩種典型?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">1行為學習:關注消費者的行為，強調[刺激>反應]的連結。主張消費者接受到感官刺激而產生反應，進而發生學習和改變。行為學習又分古典制約與工具制約。
+2認知學習:一個人由知覺和經驗在行為上產生持續性的改變、不斷發展的經驗過程。可以是直接/間接學習，例如:小孩常常耳濡目染父母的行為。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q8</div>
+                        <div class="question">何謂感官記憶、短期記憶、長期記憶?關聯為何?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">編碼後的外部資訊，被消費者保留在大腦記憶區內。
+1感官記憶:消費者收到感官刺激所形成的暫存記憶。會較難以提取或較為片段。
+2短期記憶:感官記憶經選擇性注意後，會在大腦留下一小段短期記憶，方便消費者學習或模仿，並非所有感官記憶都會被留下。
+3長期記憶:消費者可以透過短期記憶的重複演練進行記憶的鞏固，儲存在大腦裡幾天甚至幾年的記憶。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">消費者行為</div>
+                        <div class="question-number">Q9</div>
+                        <div class="question">何謂消費者說服?消費者認知失調時常採取的處理策略並舉一例?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">消費者態度改變=說服。消費者對態度標的物的態度產生轉變，是一個動態的過程。
+消費者隨著知覺和注意到新資訊，會在過程中選擇對新資訊是否接受，若接受就有可能改變態度。常用的處理策略有五種:
+1增加額外認知:增加更多認知來確認新認知和舊認知的可信度。
+2增加協調認知:透過增加更多的協調認知來減少新認知和舊認知的失調。
+3改變認知權重:透過不一致認知的群眾調整來降低心理的不適感。
+4拒絕新認知:否認或不接受新資訊和認知，態度就不會產生改變。
+例如沒去過的店家，為了避免認知失調，選擇不看Google map上的星等評論，而自己親自去體驗。</div>
+                    </div>
+                </div>
+
+                <!-- 策略管理 -->
+                <div id="strategic-management" class="section">
+                    <div class="subject-header">
+                        <h2>🎯 策略管理完整題庫 (共12題)</h2>
+                        <p>根據您的筆記內容，一字不差完整收錄</p>
+                    </div>
+                    
+                    <input type="text" class="search-box" placeholder="🔍 搜尋題目關鍵字..." onkeyup="searchQuestions(this.value, 'strategic-management')">
+                    
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q1</div>
+                        <div class="question">全球環境下的企業策略?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">總公司進行國際競爭時，可選擇四種策略:
+1全球標準化策略 2在地化策略
+3跨國策略       4國際策略</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q2</div>
+                        <div class="question">[規模經濟]與[範疇經濟]?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">規模經濟(Economies of Scale):透過生產規模的擴大使單位成本下降，提高生產效率，而經濟規模的效果是來自於學習曲線、數量折扣等。
+範疇經濟(Economies of Scope):由兩個或多個事業單位共同投資、共享資源，所以各企業共同分擔研發、行銷等各方面成本。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q3</div>
+                        <div class="question">什麼是策略委外?主要原因為?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">策略委外是企業清楚地認清自己的核心能力與價值所在，並且將非核心事業部分委外操作，以便專注於核心業務，提升經營效率和競爭力。
+委外的原因為有四種: 1降低成本 2專注在核心能力上
+3建立彈性的成本結構 4取得企業欠缺的技能或技術。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q4</div>
+                        <div class="question">何謂多角化，多角化的類型有哪幾種?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">多角化策略是指企業以全新的產品，進入一個全新的產業和市場。
+多角化時，可依其內部事業組合方式的不同分為三種:
+1有限多角化:公司所有或大部份事業均屬同一產業
+2相關多角化:公司經營超過一個以上的市場或事業
+3非相關多角化:公司經營的事業彼此間並沒有共享資源或相同屬性</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q5</div>
+                        <div class="question">併購的定義和不同的類型?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">併購(M&A)是包含[合併merge]和[收購acquisition]兩種，收購是指某一公司購買其他公司的資產或股權，可分為股權收購和資產收購。合併是指兩家以上的公司經由法律程序結合成一家公司，可分為吸收合併和設立合併。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q6</div>
+                        <div class="question">何謂策略聯盟?可以區分為哪三類?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">策略聯盟是指一種個組織間的架構關係，藉此可促進此架構中的各機構能夠在一定的協議下，有更好的互動合作機會。策略聯盟可以區分為三類:
+1非股權聯盟:公司間的合作透過契約來管理，彼此沒有交叉持股或另創公司。
+2股權聯盟:除了合作契約外，聯盟的一方有股權投資在另一方。
+3合資:合作的公司透過共同投資來創立新公司，共享利潤。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q7</div>
+                        <div class="question">Porter的事業策略類型為何?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">競爭範圍
+廣泛目標市場: 成本領導策略  差異化策略
+狹窄目標市場: 成本集中  　　差異化集中
+              　低成本  　　　差異化
+               　　　競爭優勢</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q8</div>
+                        <div class="question">企業的功能策略如何建構?競爭優勢如何產生?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">在企業內部環境分析中，企業可審視內部的[資源]與[能耐]，藉以發展出[核心能力]，並據此建立[策略]，來營造企業長久的[競爭優勢]。而企業的各項功能策略，則主要訴求在[經營效率]、[全面品管]、[創新能力]、[顧客回應]四項構面的提升。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q9</div>
+                        <div class="question">規模經濟、學習效果和經驗曲線?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">學習效果是指經由實際的重複操作和學習之後，使個人的行為得以提升和有效，使經營獲得成本和費用上的減少。
+當企業受益於規模經濟和學習效果後，單位的成本隨者累積的生產量而逐漸下降，產生經驗曲線之現象。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q10</div>
+                        <div class="question">企業如何運用創造力三要素來激發員工創意?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">1專業技術:當員工在工作領域都具備相關能力且十分熟練，才能發揮創新創造的能力。
+2創意思考的技巧:除了個人屬性外，組織也可創造不同多元思考的空間與環境，利用團隊力量激發出更多更好的創意。
+3工作本身的激勵:企業可以在公司的升遷與獎勵上與創造力相結合，才能長久。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q11</div>
+                        <div class="question">維持性創新和破壞式創新的內容?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">1維持性創新:是新建立在公司現有技術和能力基礎上，謀求不斷的改良進步。是一種習慣性、維持性的創新行為，把更好的產品或服務帶到現有市場上。
+2破壞性創新:是改變原有技術發展路徑的創新，推出新價值主張，以創造新市場或改造現有市場。有兩種類型:新市場的破壞性創新、低階市場的破壞性創新。</div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="category-tag">策略管理</div>
+                        <div class="question-number">Q12</div>
+                        <div class="question">藍海與紅海有何差異?[四項行動架構]內容為何?</div>
+                        <button class="toggle-answer" onclick="toggleAnswer(this)">顯示答案</button>
+                        <div class="answer">紅海策略認定產業結構是固定的，每個產業有其疆界，只能在此界限內競逐市佔率，進行零和競爭。
+藍海策略跳脫傳統一元獲利思維，認為企業可挖掘未被開發的新市場，駛進廣闊的藍色海洋。
+藍海策略的四項行動架構:
+1消去-消除產業內習以為常但已無價值的因素。
+2降低-哪些因素應降低至低於產業標準減少成本。
+3提升-哪些因素應拉高至高於產業標準提供更高價值。
+4創造-創造產業從未提供的新因素。</div>
+                    </div>
+                </div>
+
+                <!-- 隨機測驗 -->
+                <div id="random-quiz" class="section">
+                    <h2>🎲 隨機測驗模式</h2>
+                    <p>從21題中隨機抽取，模擬真實考試環境！</p>
+                    
+                    <div class="timer">
+                        <h3>⏱️ 答題計時</h3>
+                        <div class="timer-display" id="quizTimer">00:00</div>
+                        <button onclick="startQuizTimer()" class="toggle-answer">重新計時</button>
+                    </div>
+
+                    <button class="random-question" onclick="generateRandomQuestion()">🎯 開始隨機測驗</button>
+                    
+                    <div id="randomQuestionContainer" style="display: none;">
+                        <div class="question-card">
+                            <div class="category-tag" id="randomCategory">隨機題目</div>
+                            <div class="question-number" id="randomNumber">Q?</div>
+                            <div class="question" id="randomQuestion">題目將顯示在這裡</div>
+                            <button class="toggle-answer" onclick="toggleRandomAnswer()">顯示參考答案</button>
+                            <div class="answer" id="randomAnswer">答案將顯示在這裡</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 重點整理 -->
+                <div id="key-points" class="section">
+                    <h2>📝 考前重點整理</h2>
+                    
+                    <div class="key-points">
+                        <h3>🧠 消費者行為核心概念速記</h3>
+                        <ul>
+                            <li><strong>馬斯洛需求層次：</strong>自我實現→尊重→親密關係→安全→生理 (「自尊親安生」)</li>
+                            <li><strong>人格分析六學派：</strong>精神分析、個體心理、分析心理、社會心理、人本心理、卡特爾特徵理論</li>
+                            <li><strong>消費問題確認：</strong>產品損耗(現實下降) vs 慾望增長(理想上升)</li>
+                            <li><strong>產品處置：</strong>永久處理(丟棄、轉讓、交換、銷售) vs 保存處置(租借、轉換用途、繼續持有)</li>
+                            <li><strong>感官刺激五類型：</strong>視覺(眼睛)、聽覺(耳朵)、嗅覺(鼻子)、味覺(口腔)、觸覺(皮膚)</li>
+                            <li><strong>消費者暴露：</strong>選擇性暴露、過度暴露、感官門檻(絕對門檻、差異門檻)</li>
+                            <li><strong>學習類型：</strong>行為學習(古典制約、工具制約) vs 認知學習(直接/間接學習)</li>
+                            <li><strong>記憶三階段：</strong>感官記憶→短期記憶→長期記憶</li>
+                            <li><strong>認知失調處理：</strong>增加額外認知、增加協調認知、改變認知權重、拒絕新認知</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🎯 策略管理核心概念速記</h3>
+                        <ul>
+                            <li><strong>全球策略：</strong>全球標準化、在地化、跨國策略、國際策略</li>
+                            <li><strong>規模經濟 vs 範疇經濟：</strong>生產規模擴大降成本 vs 多事業共享資源分擔成本</li>
+                            <li><strong>策略委外原因：</strong>降低成本、專注核心能力、建立彈性成本結構、取得欠缺技能</li>
+                            <li><strong>多角化類型：</strong>有限多角化(同產業)、相關多角化(相關事業)、非相關多角化(無相關性)</li>
+                            <li><strong>併購類型：</strong>合併(吸收合併、設立合併) vs 收購(股權收購、資產收購)</li>
+                            <li><strong>策略聯盟：</strong>非股權聯盟(契約)、股權聯盟(交叉持股)、合資(創立新公司)</li>
+                            <li><strong>Porter競爭策略：</strong>成本領導、差異化、成本集中、差異化集中</li>
+                            <li><strong>功能策略構面：</strong>經營效率、全面品管、創新能力、顧客回應</li>
+                            <li><strong>創造力三要素：</strong>專業技術、創意思考技巧、工作本身激勵</li>
+                            <li><strong>創新類型：</strong>維持性創新(現有基礎改良) vs 破壞性創新(改變技術路徑)</li>
+                            <li><strong>藍海 vs 紅海：</strong>創造新市場 vs 既有市場競爭</li>
+                            <li><strong>藍海四行動：</strong>消去、降低、提升、創造 (「消降提創」)</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🔥 考試必背金句口訣</h3>
+                        <ul>
+                            <li><strong>馬斯洛需求：</strong>「自尊親安生」(自我實現、尊重、親密關係、安全、生理)</li>
+                            <li><strong>感官刺激：</strong>「視聽嗅味觸」(視覺、聽覺、嗅覺、味覺、觸覺)</li>
+                            <li><strong>記憶流程：</strong>「感短長」(感官記憶→短期記憶→長期記憶)</li>
+                            <li><strong>Porter策略：</strong>「成差成差」(成本領導、差異化、成本集中、差異化集中)</li>
+                            <li><strong>多角化：</strong>「有相非」(有限、相關、非相關)</li>
+                            <li><strong>藍海行動：</strong>「消降提創」(消去、降低、提升、創造)</li>
+                            <li><strong>策略聯盟：</strong>「非股合」(非股權、股權、合資)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 考試技巧 -->
+                <div id="study-tips" class="section">
+                    <h2>💡 考試技巧與策略</h2>
+                    
+                    <div class="key-points">
+                        <h3>📋 標準答題結構 (每題15-20分鐘)</h3>
+                        <ul>
+                            <li><strong>第1步 - 定義(20%)：</strong>清楚定義題目核心概念</li>
+                            <li><strong>第2步 - 分類(40%)：</strong>分點說明，至少3-5個要點</li>
+                            <li><strong>第3步 - 舉例(30%)：</strong>每個要點都要有具體例子</li>
+                            <li><strong>第4步 - 總結(10%)：</strong>呼應題目，展現整合思考</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>⏰ 時間分配策略</h3>
+                        <ul>
+                            <li><strong>審題階段(5%)：</strong>仔細讀題2-3遍，劃出關鍵字</li>
+                            <li><strong>構思階段(10%)：</strong>快速列出答案大綱，確定要點順序</li>
+                            <li><strong>作答階段(80%)：</strong>按大綱詳細書寫，保持字跡清晰</li>
+                            <li><strong>檢查階段(5%)：</strong>檢查是否遺漏要點，補充關鍵內容</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>✍️ 高分技巧</h3>
+                        <ul>
+                            <li><strong>使用專業術語：</strong>展現學術素養，如「認知失調」、「範疇經濟」</li>
+                            <li><strong>善用編號分點：</strong>1. 2. 3. 讓答案結構清晰</li>
+                            <li><strong>每點都舉例：</strong>理論+實例，如馬斯洛需求+具體消費行為</li>
+                            <li><strong>跨章節連結：</strong>將不同概念整合，展現深度理解</li>
+                            <li><strong>圖表輔助：</strong>適當畫圖說明，如Porter策略矩陣</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🚫 避免失分陷阱</h3>
+                        <ul>
+                            <li><strong>不要答非所問：</strong>緊扣題目要求，不要離題發揮</li>
+                            <li><strong>不要內容重複：</strong>每個要點要有不同角度</li>
+                            <li><strong>不要舉例不當：</strong>例子要符合理論概念</li>
+                            <li><strong>不要字跡潦草：</strong>影響評分者印象</li>
+                            <li><strong>不要時間失控：</strong>每題控制在15-20分鐘內</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 答題模板 -->
+                <div id="exam-template" class="section">
+                    <h2>📋 萬用答題模板</h2>
+                    
+                    <div class="key-points">
+                        <h3>🧠 消費者行為題型模板</h3>
+                        <ul>
+                            <li><strong>理論定義題：</strong>「OO理論是指...，主要包含...個層次/類型」→分點詳述→舉例說明→總結重要性</li>
+                            <li><strong>分類說明題：</strong>「根據...標準，可分為...類型」→逐一說明特色→對比差異→實務應用</li>
+                            <li><strong>影響因素題：</strong>「影響...的因素主要有...」→分點說明機制→舉例驗證→管理意涵</li>
+                            <li><strong>過程說明題：</strong>「...過程包含...階段」→階段順序→轉換機制→實際案例</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🎯 策略管理題型模板</h3>
+                        <ul>
+                            <li><strong>策略類型題：</strong>「...策略可分為...種類型」→定義特色→適用情境→企業案例→比較優劣</li>
+                            <li><strong>競爭分析題：</strong>「根據...分析架構」→說明構面→策略選擇→實施要點→成功關鍵</li>
+                            <li><strong>組織能力題：</strong>「...能力的建構需要...」→核心要素→發展過程→競爭優勢→持續改善</li>
+                            <li><strong>創新管理題：</strong>「...創新包含...」→類型區分→管理挑戰→成功因素→企業實例</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>📝 萬用開頭句型</h3>
+                        <ul>
+                            <li><strong>定義型：</strong>「...是指企業/消費者在...情況下的...行為/策略」</li>
+                            <li><strong>分類型：</strong>「根據...標準/構面，...可以分為...種類型」</li>
+                            <li><strong>過程型：</strong>「...是一個動態過程，主要包含...個階段」</li>
+                            <li><strong>因素型：</strong>「影響...的關鍵因素主要包含以下幾個面向」</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🎯 萬用結尾句型</h3>
+                        <ul>
+                            <li><strong>重要性：</strong>「因此，...對於企業/消費者具有重要的策略意義」</li>
+                            <li><strong>整合性：</strong>「綜上所述，...需要整合考量多個因素才能有效實施」</li>
+                            <li><strong>實務性：</strong>「在實務應用上，企業應該根據自身情況選擇適合的...」</li>
+                            <li><strong>前瞻性：</strong>「隨著環境變化，...將持續演進並影響企業競爭力」</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let timerRunning = false;
+        let seconds = 0;
+        let quizTimerInterval;
+        let quizSeconds = 0;
+        let questionsAnswered = 0;
+        const totalQuestions = 21;
+        let randomAnswerShown = false;
+
+        // 完整題目資料庫
+        const allQuestions = [
+            // 消費者行為題目
+            {category: '消費者行為', number: 'Q1', question: '何謂馬斯洛需求層次理論?', answer: '馬斯洛主張個體動機包含五大層次需求:\n高層需要至低層需要為:\n1自我實現需求:自我實現、發揮潛能\n2尊重需求:聲望、成就、地位\n3親密關係需求:愛情、友誼、被他人接受\n4安全需求:人生安全、生活穩定\n5生理需求:水、食物、睡眠'},
+            {category: '消費者行為', number: 'Q2', question: '常見的人格分析論述有哪些?試舉其出兩種並簡述。', answer: '常見的人格分析論述有六學派:\n1精神分析學學派:[本我、自我、超我]觀點。\n2個體心理學學派\n3分析心理學學派:卡爾提出[自我意識、個體潛意識、集體潛意識]三大面向。\n4社會心理學學派\n5人本心理學學派\n6卡特爾的特徵理論:將化學元素表的科學分析方式運用於心理學上，分析出個體性格特徵具三類型-16種根源特質。'},
+            {category: '消費者行為', number: 'Q3', question: '消費者如何確認消費問題?透過消費者理想狀態和實際狀態之差距說明。', answer: '理想與現實差距可以接受，就沒有消費問題。\n而產生消費問題常見因素來自於產品損耗和慾望增長。\n1產品損耗(現實下降):例如電腦出現硬體故障，嚴重影響工作，覺得有必要購買新電腦來解決問題。\n2慾望增長(理想上升):例如朋友買高階新款手機，羨慕朋友使用的好體驗，即使自己手機沒壞但也想換一部新手機。'},
+            {category: '消費者行為', number: 'Q4', question: '消費者產品處置有哪些永久處理方法?有哪些保存處置方法?', answer: '依殘存價值運用程度，永久處理方法有四種類型:\n1丟棄:將產品當作無價值物品回收 2轉讓:將產品轉讓給需要的人 \n3交換:讓產品發揮其殘存價值 4銷售:將產品殘存價值轉換成金錢\n常見保存處置有三種:\n1租借:可以租借給他人獲得租金收入 2轉換用途:是一種廢物利用的方式\n3繼續持有:常見原因有紀念價值和蒐集嗜好'},
+            {category: '消費者行為', number: 'Q5', question: '消費者的感官刺激有哪五種類型?請說明五種感官刺激之感官接收器並舉例。', answer: '1視覺(感官接受器:眼睛):例如曲線瓶包裝的優酪乳呼應低熱量能雕塑身體曲線的概念。\n2聽覺(感官接收器:耳朵):例如咖啡廳撥放柔和的爵士樂會感到放鬆舒適。\n3嗅覺(感官接收器:鼻子):例如寢具店使用薰衣草香氛安定身心。\n4味覺(感覺接收器:口腔):例如大賣場的烤肉試吃活動。\n5觸覺(感官接收器:皮膚):例如家具店擺放柔軟滑順的皮革沙發試坐。'},
+            {category: '消費者行為', number: 'Q6', question: '何謂消費者暴露?選擇性暴露、過度暴露、感官門檻?', answer: '消費者暴露:消費者注意到感官接受器所接受到的刺激程度，也是感知過程的第一階段。並不是所有的刺激都會轉化為消費者的知覺。影響因素有以下:\n選擇性暴露:避免認知負擔過大的篩選機制，往往會選擇有興趣的刺激而忽略其他的刺激。\n過度暴露:同一個刺激下太久或太頻繁產生疲乏，使得刺激失效。\n感官門檻:感官接收器能接收到的最低刺激強度，包含絕對門檻、差異門檻。'},
+            {category: '消費者行為', number: 'Q7', question: '消費者學習大致分為哪兩種典型?', answer: '1行為學習:關注消費者的行為，強調[刺激>反應]的連結。主張消費者接受到感官刺激而產生反應，進而發生學習和改變。行為學習又分古典制約與工具制約。\n2認知學習:一個人由知覺和經驗在行為上產生持續性的改變、不斷發展的經驗過程。可以是直接/間接學習，例如:小孩常常耳濡目染父母的行為。'},
+            {category: '消費者行為', number: 'Q8', question: '何謂感官記憶、短期記憶、長期記憶?關聯為何?', answer: '編碼後的外部資訊，被消費者保留在大腦記憶區內。\n1感官記憶:消費者收到感官刺激所形成的暫存記憶。會較難以提取或較為片段。\n2短期記憶:感官記憶經選擇性注意後，會在大腦留下一小段短期記憶，方便消費者學習或模仿，並非所有感官記憶都會被留下。\n3長期記憶:消費者可以透過短期記憶的重複演練進行記憶的鞏固，儲存在大腦裡幾天甚至幾年的記憶。'},
+            {category: '消費者行為', number: 'Q9', question: '何謂消費者說服?消費者認知失調時常採取的處理策略並舉一例?', answer: '消費者態度改變=說服。消費者對態度標的物的態度產生轉變，是一個動態的過程。\n消費者隨著知覺和注意到新資訊，會在過程中選擇對新資訊是否接受，若接受就有可能改變態度。常用的處理策略有五種:\n1增加額外認知:增加更多認知來確認新認知和舊認知的可信度。\n2增加協調認知:透過增加更多的協調認知來減少新認知和舊認知的失調。\n3改變認知權重:透過不一致認知的群眾調整來降低心理的不適感。\n4拒絕新認知:否認或不接受新資訊和認知，態度就不會產生改變。\n例如沒去過的店家，為了避免認知失調，選擇不看Google map上的星等評論，而自己親自去體驗。'},
+            
+            // 策略管理題目
+            {category: '策略管理', number: 'Q1', question: '全球環境下的企業策略?', answer: '總公司進行國際競爭時，可選擇四種策略:\n1全球標準化策略 2在地化策略\n3跨國策略       4國際策略'},
+            {category: '策略管理', number: 'Q2', question: '[規模經濟]與[範疇經濟]?', answer: '規模經濟(Economies of Scale):透過生產規模的擴大使單位成本下降，提高生產效率，而經濟規模的效果是來自於學習曲線、數量折扣等。\n範疇經濟(Economies of Scope):由兩個或多個事業單位共同投資、共享資源，所以各企業共同分擔研發、行銷等各方面成本。'},
+            {category: '策略管理', number: 'Q3', question: '什麼是策略委外?主要原因為?', answer: '策略委外是企業清楚地認清自己的核心能力與價值所在，並且將非核心事業部分委外操作，以便專注於核心業務，提升經營效率和競爭力。\n委外的原因為有四種: 1降低成本 2專注在核心能力上\n3建立彈性的成本結構 4取得企業欠缺的技能或技術。'},
+            {category: '策略管理', number: 'Q4', question: '何謂多角化，多角化的類型有哪幾種?', answer: '多角化策略是指企業以全新的產品，進入一個全新的產業和市場。\n多角化時，可依其內部事業組合方式的不同分為三種:\n1有限多角化:公司所有或大部份事業均屬同一產業\n2相關多角化:公司經營超過一個以上的市場或事業\n3非相關多角化:公司經營的事業彼此間並沒有共享資源或相同屬性'},
+            {category: '策略管理', number: 'Q5', question: '併購的定義和不同的類型?', answer: '併購(M&A)是包含[合併merge]和[收購acquisition]兩種，收購是指某一公司購買其他公司的資產或股權，可分為股權收購和資產收購。合併是指兩家以上的公司經由法律程序結合成一家公司，可分為吸收合併和設立合併。'},
+            {category: '策略管理', number: 'Q6', question: '何謂策略聯盟?可以區分為哪三類?', answer: '策略聯盟是指一種個組織間的架構關係，藉此可促進此架構中的各機構能夠在一定的協議下，有更好的互動合作機會。策略聯盟可以區分為三類:\n1非股權聯盟:公司間的合作透過契約來管理，彼此沒有交叉持股或另創公司。\n2股權聯盟:除了合作契約外，聯盟的一方有股權投資在另一方。\n3合資:合作的公司透過共同投資來創立新公司，共享利潤。'},
+            {category: '策略管理', number: 'Q7', question: 'Porter的事業策略類型為何?', answer: '競爭範圍\n廣泛目標市場: 成本領導策略  差異化策略\n狹窄目標市場: 成本集中  　　差異化集中\n              　低成本  　　　差異化\n               　　　競爭優勢'},
+            {category: '策略管理', number: 'Q8', question: '企業的功能策略如何建構?競爭優勢如何產生?', answer: '在企業內部環境分析中，企業可審視內部的[資源]與[能耐]，藉以發展出[核心能力]，並據此建立[策略]，來營造企業長久的[競爭優勢]。而企業的各項功能策略，則主要訴求在[經營效率]、[全面品管]、[創新能力]、[顧客回應]四項構面的提升。'},
+            {category: '策略管理', number: 'Q9', question: '規模經濟、學習效果和經驗曲線?', answer: '學習效果是指經由實際的重複操作和學習之後，使個人的行為得以提升和有效，使經營獲得成本和費用上的減少。\n當企業受益於規模經濟和學習效果後，單位的成本隨者累積的生產量而逐漸下降，產生經驗曲線之現象。'},
+            {category: '策略管理', number: 'Q10', question: '企業如何運用創造力三要素來激發員工創意?', answer: '1專業技術:當員工在工作領域都具備相關能力且十分熟練，才能發揮創新創造的能力。\n2創意思考的技巧:除了個人屬性外，組織也可創造不同多元思考的空間與環境，利用團隊力量激發出更多更好的創意。\n3工作本身的激勵:企業可以在公司的升遷與獎勵上與創造力相結合，才能長久。'},
+            {category: '策略管理', number: 'Q11', question: '維持性創新和破壞式創新的內容?', answer: '1維持性創新:是新建立在公司現有技術和能力基礎上，謀求不斷的改良進步。是一種習慣性、維持性的創新行為，把更好的產品或服務帶到現有市場上。\n2破壞性創新:是改變原有技術發展路徑的創新，推出新價值主張，以創造新市場或改造現有市場。有兩種類型:新市場的破壞性創新、低階市場的破壞性創新。'},
+            {category: '策略管理', number: 'Q12', question: '藍海與紅海有何差異?[四項行動架構]內容為何?', answer: '紅海策略認定產業結構是固定的，每個產業有其疆界，只能在此界限內競逐市佔率，進行零和競爭。\n藍海策略跳脫傳統一元獲利思維，認為企業可挖掘未被開發的新市場，駛進廣闊的藍色海洋。\n藍海策略的四項行動架構:\n1消去-消除產業內習以為常但已無價值的因素。\n2降低-哪些因素應降低至低於產業標準減少成本。\n3提升-哪些因素應拉高至高於產業標準提供更高價值。\n4創造-創造產業從未提供的新因素。'}
+        ];
+
+        // 切換分頁
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 切換答案顯示
+        function toggleAnswer(button) {
+            const answer = button.nextElementSibling;
+            if (!answer.classList.contains('show')) {
+                answer.classList.add('show');
+                button.textContent = '隱藏答案';
+                questionsAnswered++;
+                updateProgress();
+            } else {
+                answer.classList.remove('show');
+                button.textContent = '顯示答案';
+            }
+        }
+
+        // 切換隨機答案顯示
+        function toggleRandomAnswer() {
+            const answer = document.getElementById('randomAnswer');
+            const button = document.querySelector('#randomQuestionContainer .toggle-answer');
+            
+            if (!randomAnswerShown) {
+                answer.classList.add('show');
+                button.textContent = '隱藏參考答案';
+                randomAnswerShown = true;
+            } else {
+                answer.classList.remove('show');
+                button.textContent = '顯示參考答案';
+                randomAnswerShown = false;
+            }
+        }
+
+        // 更新進度
+        function updateProgress() {
+            const progress = Math.min((questionsAnswered / totalQuestions) * 100, 100);
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('answeredQuestions').textContent = questionsAnswered;
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+        }
+
+        // 學習計時器
+        function toggleTimer() {
+            const button = document.getElementById('timerBtn');
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                button.textContent = '繼續學習';
+                timerRunning = false;
+            } else {
+                timerInterval = setInterval(updateTimer, 1000);
+                button.textContent = '暫停學習';
+                timerRunning = true;
+            }
+        }
+
+        function updateTimer() {
+            seconds++;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = seconds % 60;
+            
+            const timeString = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(remainingSeconds).padStart(2, '0');
+            
+            document.getElementById('timer').textContent = timeString;
+        }
+
+        // 測驗計時器
+        function startQuizTimer() {
+            quizSeconds = 0;
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = setInterval(() => {
+                quizSeconds++;
+                const minutes = Math.floor(quizSeconds / 60);
+                const remainingSeconds = quizSeconds % 60;
+                document.getElementById('quizTimer').textContent = 
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(remainingSeconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // 生成隨機題目
+        function generateRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * allQuestions.length);
+            const randomQuestion = allQuestions[randomIndex];
+            
+            document.getElementById('randomCategory').textContent = randomQuestion.category;
+            document.getElementById('randomNumber').textContent = randomQuestion.number;
+            document.getElementById('randomQuestion').textContent = randomQuestion.question;
+            document.getElementById('randomAnswer').textContent = randomQuestion.answer;
+            
+            // 重置答案顯示狀態
+            const answerDiv = document.getElementById('randomAnswer');
+            const button = document.querySelector('#randomQuestionContainer .toggle-answer');
+            answerDiv.classList.remove('show');
+            button.textContent = '顯示參考答案';
+            randomAnswerShown = false;
+            
+            document.getElementById('randomQuestionContainer').style.display = 'block';
+            startQuizTimer();
+        }
+
+        // 搜尋功能
+        function searchQuestions(keyword, sectionId) {
+            const questionCards = document.querySelectorAll(`#${sectionId} .question-card`);
+            
+            questionCards.forEach(card => {
+                const questionText = card.querySelector('.question').textContent.toLowerCase();
+                const answerText = card.querySelector('.answer').textContent.toLowerCase();
+                const searchText = keyword.toLowerCase();
+                
+                if (questionText.includes(searchText) || answerText.includes(searchText)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = searchText === '' ? 'block' : 'none';
+                }
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
