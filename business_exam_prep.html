@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>商業考試完整複習系統</title>
     <style>
         * {
@@ -302,6 +302,289 @@
             outline: none;
             border-color: #4facfe;
         }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* 手機響應式設計 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .main-content {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 0;
+                background: white;
+                border-right: none;
+                border-bottom: 2px solid #e9ecef;
+                position: relative;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar .nav-button {
+                display: none;
+                margin: 5px 0;
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            .sidebar.mobile-open .nav-button {
+                display: block;
+            }
+
+            .sidebar.mobile-open {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 80%;
+                height: 100vh;
+                background: white;
+                z-index: 1000;
+                padding: 20px;
+                overflow-y: auto;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+
+            .mobile-overlay.show {
+                display: block;
+            }
+
+            .content-area {
+                padding: 15px;
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .question-card {
+                padding: 18px;
+                margin-bottom: 15px;
+                border-radius: 12px;
+            }
+
+            .question {
+                font-size: 1.1em;
+                line-height: 1.4;
+                margin-bottom: 12px;
+            }
+
+            .answer {
+                padding: 15px;
+                border-radius: 8px;
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+
+            .toggle-answer {
+                padding: 12px 18px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 15px 0;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 1.8em;
+            }
+
+            .timer {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .timer-display {
+                font-size: 1.5em;
+            }
+
+            .random-question {
+                padding: 12px 20px;
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+
+            .key-points {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .key-points h3 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+
+            .key-points li {
+                padding: 6px 0;
+                font-size: 0.95em;
+                line-height: 1.4;
+            }
+
+            .subject-header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .subject-header h2 {
+                font-size: 1.3em;
+            }
+
+            .subject-header p {
+                font-size: 0.9em;
+            }
+
+            .search-box {
+                padding: 12px;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .category-tag {
+                font-size: 0.8em;
+                padding: 4px 12px;
+                margin-bottom: 8px;
+            }
+
+            .question-number {
+                font-size: 0.75em;
+                padding: 4px 8px;
+                margin-right: 8px;
+            }
+
+            .difficulty {
+                margin-bottom: 12px;
+                font-size: 0.9em;
+            }
+
+            .progress-bar {
+                height: 15px;
+                margin: 15px 0;
+            }
+
+            /* 觸控優化 */
+            .nav-button, .toggle-answer, .random-question {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .nav-button:active, .toggle-answer:active, .random-question:active {
+                transform: scale(0.98);
+            }
+
+            /* 防止文字選取 */
+            .nav-button, .toggle-answer, .random-question, .mobile-menu-toggle {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+        }
+
+        /* 超小螢幕優化 (iPhone SE等) */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .question-card {
+                padding: 15px;
+            }
+
+            .question {
+                font-size: 1em;
+            }
+
+            .answer {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .toggle-answer {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .key-points {
+                padding: 12px;
+            }
+
+            .content-area {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -312,7 +595,10 @@
         </div>
 
         <div class="main-content">
-            <div class="sidebar">
+            <div class="sidebar" id="sidebar">
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    📱 選擇複習項目 ▼
+                </button>
                 <button class="nav-button active" onclick="showSection('dashboard')">
                     📊 學習儀表板
                 </button>
@@ -364,6 +650,10 @@
 
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                    
+                    <div class="progress-info">
+                        <span id="progressText">開始您的複習之旅吧！</span>
                     </div>
 
                     <div class="key-points">
@@ -845,6 +1135,38 @@
             const buttons = document.querySelectorAll('.nav-button');
             buttons.forEach(button => button.classList.remove('active'));
             event.target.classList.add('active');
+            
+            // 手機版自動關閉選單
+            if (window.innerWidth <= 768) {
+                closeMobileMenu();
+            }
+        }
+
+        // 手機選單控制
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
+            
+            if (sidebar.classList.contains('mobile-open')) {
+                closeMobileMenu();
+            } else {
+                sidebar.classList.add('mobile-open');
+                overlay.classList.add('show');
+                toggleBtn.textContent = '❌ 關閉選單';
+                document.body.style.overflow = 'hidden'; // 防止背景滾動
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
+            
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('show');
+            toggleBtn.textContent = '📱 選擇複習項目 ▼';
+            document.body.style.overflow = ''; // 恢復滾動
         }
 
         // 切換答案顯示
@@ -883,6 +1205,22 @@
             document.getElementById('progressBar').style.width = progress + '%';
             document.getElementById('answeredQuestions').textContent = questionsAnswered;
             document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+            
+            // 更新進度文字提示
+            const progressText = document.getElementById('progressText');
+            if (progress === 0) {
+                progressText.textContent = '🚀 開始您的複習之旅吧！';
+            } else if (progress < 25) {
+                progressText.textContent = '💪 很好的開始，繼續加油！';
+            } else if (progress < 50) {
+                progressText.textContent = '🔥 進度不錯，保持節奏！';
+            } else if (progress < 75) {
+                progressText.textContent = '⭐ 超過一半了，離成功更近！';
+            } else if (progress < 100) {
+                progressText.textContent = '🎯 最後衝刺，勝利在望！';
+            } else {
+                progressText.textContent = '🎉 恭喜！所有題目都複習完成！';
+            }
         }
 
         // 學習計時器
@@ -968,6 +1306,24 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
+            
+            // 手機橫豎屏切換處理
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    // 桌面模式下關閉手機選單
+                    closeMobileMenu();
+                }
+            });
+            
+            // 防止手機上的雙擊縮放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
         });
     </script>
 </body>
